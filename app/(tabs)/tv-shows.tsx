@@ -1,22 +1,21 @@
 import * as React from 'react';
 import { View, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 import { useQuery } from '@tanstack/react-query';
-import { getTVShows, VideoItem } from '../services/api';
+import {getMovies, getTVShows, VideoItem} from '../services/api';
 import VideoCard from '../components/VideoCard';
 import { useRouter } from 'expo-router';
 
 export default function TVShowsScreen() {
   const router = useRouter();
   const [page, setPage] = React.useState(1);
-  const { data, isLoading, fetchNextPage } = useQuery(
-    ['tvShows', page],
-    () => getTVShows(page)
-  );
+  const { data, isLoading } = useQuery({
+    queryKey:[page],
+    queryFn: () => getTVShows(page)
+  });
 
   const handleLoadMore = () => {
     if (data?.hasMore) {
       setPage(prev => prev + 1);
-      fetchNextPage();
     }
   };
 
@@ -40,7 +39,7 @@ export default function TVShowsScreen() {
         keyExtractor={item => item.id.toString()}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}
-        ListFooterComponent={() => 
+        ListFooterComponent={() =>
           isLoading ? <ActivityIndicator style={styles.footerLoader} /> : null
         }
       />
@@ -60,4 +59,4 @@ const styles = StyleSheet.create({
   footerLoader: {
     padding: 10,
   },
-}); 
+});

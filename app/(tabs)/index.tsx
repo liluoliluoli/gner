@@ -7,7 +7,10 @@ import { useRouter } from 'expo-router';
 
 export default function HomeScreen() {
   const router = useRouter();
-  const { data: history, isLoading } = useQuery<VideoItem[]>(['history'], getWatchHistory);
+  const { data: history, isLoading:isLoading } = useQuery({
+      queryKey: [],
+      queryFn: getWatchHistory
+  });
 
   if (isLoading) {
     return <ActivityIndicator style={styles.loader} />;
@@ -41,4 +44,4 @@ const styles = StyleSheet.create({
     flex: 1,
     alignSelf: 'center',
   },
-}); 
+});
